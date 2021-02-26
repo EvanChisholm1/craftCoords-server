@@ -1,7 +1,6 @@
 import { config } from 'dotenv';
 config();
 import mongoose from 'mongoose';
-import './lib/passport';
 import app from './app';
 
 mongoose
