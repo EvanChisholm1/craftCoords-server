@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { body, param, query } from 'express-validator';
 import passport from 'passport';
+import coordsController from '../controllers/coordsController';
 import AuthController from '../controllers/auth';
 import WorldController from '../controllers/worldController';
 import { catchErrors, handleValidationsErrors } from '../lib/errors';
@@ -47,6 +48,17 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   param('id').exists().isString(),
   catchErrors(WorldController.getWorld)
+);
+router.get(
+  '/world/:id/coords',
+  passport.authenticate('jwt', { session: false }),
+  catchErrors(WorldController.getWorldCoords)
+);
+
+router.post(
+  '/coords/:id',
+  passport.authenticate('jwt', { session: false }),
+  catchErrors(coordsController.addCoords)
 );
 
 // a route to test jwt auth
