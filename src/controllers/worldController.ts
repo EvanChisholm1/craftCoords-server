@@ -14,10 +14,13 @@ class WorldController {
     res.json(world);
   }
 
-  static async getMyWorlds(req: Request<{ page: string }>, res: Response) {
+  static async getMyWorlds(
+    req: Request<any, any, any, { page: string }>,
+    res: Response
+  ) {
     const user = extractUser(req);
 
-    let page = parseInt(req.params.page) || 1;
+    let page = parseInt(req.query.page) || 1;
     const limit = 10;
     const skip = page * limit - limit;
 
@@ -30,10 +33,21 @@ class WorldController {
     const countPromise = World.countDocuments({ owner: user?.id });
 
     const [worlds, count] = await Promise.all([worldsPromise, countPromise]);
+    const pages = Math.ceil(count / limit);
     res.json({
       count,
       worlds,
+      pages,
+      page,
     });
+  }
+
+  static async getWorld(req: Request<{ id: string }>, res: Response) {
+    const user = extractUser(req);
+
+    const id = req.params.id;
+    const world = await World.findOne({ _id: id, owner: user?._id });
+    res.json(world);
   }
 }
 

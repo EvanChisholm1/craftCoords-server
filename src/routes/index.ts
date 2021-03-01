@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { body, param } from 'express-validator';
+import { body, param, query } from 'express-validator';
 import passport from 'passport';
 import AuthController from '../controllers/auth';
 import WorldController from '../controllers/worldController';
@@ -38,8 +38,15 @@ router.post(
 router.get(
   '/worlds',
   passport.authenticate('jwt', { session: false }),
-  param('page').exists().isInt(),
+  query('page').exists().isInt(),
+  handleValidationsErrors,
   catchErrors(WorldController.getMyWorlds)
+);
+router.get(
+  '/world/:id',
+  passport.authenticate('jwt', { session: false }),
+  param('id').exists().isString(),
+  catchErrors(WorldController.getWorld)
 );
 
 // a route to test jwt auth
