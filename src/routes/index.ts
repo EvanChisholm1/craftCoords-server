@@ -55,6 +55,7 @@ router.get(
   catchErrors(WorldController.getWorldCoords)
 );
 
+//routes for the coords;
 router.post(
   '/coords/:id',
   passport.authenticate('jwt', { session: false }),

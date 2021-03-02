@@ -6,6 +6,7 @@ export class HttpError extends Error {
   message: string;
   constructor(message: string, status?: number) {
     super(message);
+    this.message = message;
     this.status = status;
   }
 }
@@ -22,7 +23,7 @@ export function catchErrors(fn: any) {
 function validationErrorFormatter(error: ValidationError) {
   const formattedError = {
     status: 400,
-    message: `Error ${error.param}: ${error.msg} at ${error.location}`,
+    message: `Error: ${error.param} field ${error.msg}`,
   };
   return formattedError;
 }
@@ -54,5 +55,5 @@ export function handleErrors(
     message: error.message,
     status: error.status || 500,
   };
-  res.status(errorDetails.status).json(errorDetails);
+  res.status(errorDetails.status).json({ error: errorDetails });
 }
