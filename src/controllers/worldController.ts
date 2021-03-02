@@ -35,12 +35,8 @@ class WorldController {
     res.json(world);
   }
 
-  static async getWorldCoords(
-    req: Request<any, any, any, { page: string }>,
-    res: Response
-  ) {
+  static async getWorldCoords(req: Request, res: Response) {
     const user = extractUser(req);
-
     const id = req.params.id;
 
     const world = await World.findOne({ _id: id, owner: user?._id }).populate({
