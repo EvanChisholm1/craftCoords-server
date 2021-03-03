@@ -3,6 +3,7 @@ import { compare, genSalt, hash } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import User from '../models/User';
 import { HttpError } from '../lib/errors';
+import extractUser from '../lib/extractUser';
 
 interface RegisterBody {
   email?: string;
@@ -51,6 +52,16 @@ class AuthController {
     const token = sign({ sub: user.id }, process.env.TOKEN_SECRET!);
     return res.json({
       token,
+    });
+  }
+
+  static async me(req: Request, res: Response) {
+    const user = extractUser(req);
+    res.json({
+      user: {
+        email: user?.email,
+        _id: user?.id,
+      },
     });
   }
 }
