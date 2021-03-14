@@ -40,15 +40,14 @@ router.post(
 router.get(
   '/worlds',
   authenticate,
-  query('page').exists().isInt(),
   handleValidationsErrors,
   catchErrors(WorldController.getMyWorlds)
 );
-router.get(
+router.get('/world/:id', authenticate, catchErrors(WorldController.getWorld));
+router.delete(
   '/world/:id',
   authenticate,
-  param('id').exists().isString(),
-  catchErrors(WorldController.getWorld)
+  catchErrors(WorldController.deleteWorld)
 );
 router.get(
   '/world/:id/coords',

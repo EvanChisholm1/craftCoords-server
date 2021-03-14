@@ -1,7 +1,5 @@
 import { Request, Response } from 'express';
-import { promises } from 'fs';
-import { authorize } from 'passport';
-import Coords from '../models/Coords';
+import { HttpError } from '../lib/errors';
 import extractUser from '../lib/extractUser';
 import World from '../models/World';
 
@@ -43,7 +41,27 @@ class WorldController {
       path: 'coords',
     });
 
-    res.json({ world });
+    res.json({ coords: world?.coords, worldName: world?.name });
+  }
+
+  static async deleteWorld(req: Request<{ id?: string }>, res: Response) {
+    const id = req.params.id;
+    const user = extractUser(req);
+    if (!id) throw new HttpError('World id is undefined', 400);
+
+    const world = await World.findOne({ _id: id, owner: user?._id });
+    if (!world)
+      throw new HttpError(
+        `World with id: ${id} does not exist and could not be deleted`,
+        400
+      );
+    const { name } = world;
+    await world.delete();
+
+    res.json({
+      message: `successfully deleted world: ${name}`,
+      status: 200,
+    });
   }
 }
 
