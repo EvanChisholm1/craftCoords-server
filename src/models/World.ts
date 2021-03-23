@@ -38,6 +38,7 @@ worldSchema.virtual('coords', {
   ref: 'Coords',
   localField: '_id',
   foreignField: 'world',
+  default: [],
 });
 
 export default model<WorldDoc>('World', worldSchema);

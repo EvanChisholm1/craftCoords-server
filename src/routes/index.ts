@@ -61,6 +61,11 @@ router.post(
   authenticate,
   catchErrors(coordsController.addCoords)
 );
+router.delete(
+  '/coords/:id',
+  authenticate,
+  catchErrors(coordsController.deleteCoords)
+);
 
 // a route to test jwt auth
 //TODO: delete route

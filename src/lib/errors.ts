@@ -51,6 +51,7 @@ export function handleErrors(
   next: NextFunction
 ) {
   console.log('running final error handler');
+  console.log(error);
   const errorDetails = {
     message: error.message,
     status: error.status || 500,

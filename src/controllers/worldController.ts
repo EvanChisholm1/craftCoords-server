@@ -27,9 +27,16 @@ class WorldController {
 
   static async getWorld(req: Request<{ id: string }>, res: Response) {
     const user = extractUser(req);
-
     const id = req.params.id;
-    const world = await World.findOne({ _id: id, owner: user?._id });
+
+    const world = await World.findOne({ _id: id, owner: user?._id }).populate({
+      path: 'coords',
+    });
+
+    if (!world) {
+      throw new HttpError(`World with id ${id} could not be found`, 404);
+    }
+
     res.json(world);
   }
 
@@ -40,6 +47,10 @@ class WorldController {
     const world = await World.findOne({ _id: id, owner: user?._id }).populate({
       path: 'coords',
     });
+
+    if (!world) {
+      throw new HttpError(`World with id ${id} could not be found`, 404);
+    }
 
     res.json({ coords: world?.coords, worldName: world?.name });
   }
