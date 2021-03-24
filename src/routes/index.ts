@@ -31,7 +31,7 @@ router.get('/me', authenticate, AuthController.me);
 
 // world api routes
 router.post(
-  '/worlds/create',
+  '/worlds',
   authenticate,
   body('name').exists().isString(),
   handleValidationsErrors,
